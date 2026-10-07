@@ -1,0 +1,274 @@
+basePath: /
+definitions:
+  models.CreateUser:
+    properties:
+      email:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      password:
+        type: string
+    type: object
+  models.LoginUser:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  models.UpdateUser:
+    properties:
+      bio:
+        type: string
+      imageUrl:
+        type: string
+      name:
+        type: string
+    type: object
+  models.UserModel:
+    properties:
+      _id:
+        type: string
+      bio:
+        type: string
+      email:
+        type: string
+      followers:
+        items:
+          type: string
+        type: array
+      following:
+        items:
+          type: string
+        type: array
+      imageUrl:
+        type: string
+      name:
+        type: string
+      password:
+        minLength: 5
+        type: string
+    required:
+    - email
+    - password
+    type: object
+host: localhost:5000
+info:
+  contact: {}
+  description: This is Swagger docs for rest api golang fiber
+  title: Golang Fiber with MongoDB for Synoebook
+  version: "1.0"
+paths:
+  /user/{id}/following:
+    patch:
+      consumes:
+      - application/json
+      description: follow or  un follow a user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Follow/UnFollow User
+      tags:
+      - Users
+  /user/Update/{id}:
+    patch:
+      consumes:
+      - application/json
+      description: update user deatils
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 'deatils '
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateUser'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.UserModel'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: update user data
+      tags:
+      - Users
+  /user/delete/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: delete user
+      tags:
+      - Users
+  /user/getSug:
+    get:
+      consumes:
+      - application/json
+      description: get suggested userses based on the current user's following list
+      parameters:
+      - description: User ID
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get Suggersted users
+      tags:
+      - Users
+  /user/getUser/{id}:
+    get:
+      consumes:
+      - application/json
+      description: GetUser Deatils By ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.UserModel'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get User By ID
+      tags:
+      - Users
+  /user/signin:
+    post:
+      consumes:
+      - application/json
+      description: Login an user by providing email, password
+      parameters:
+      - description: user Login deatils
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginUser'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.UserModel'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: login a  user
+      tags:
+      - Authentication
+  /user/signup:
+    post:
+      consumes:
+      - application/json
+      description: Register an new user by providing email, password , first name
+        , last name
+      parameters:
+      - description: user register deatils
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateUser'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.UserModel'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Register a new user
+      tags:
+      - Authentication
+schemes:
+- http
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer" followed by a space and the token
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
