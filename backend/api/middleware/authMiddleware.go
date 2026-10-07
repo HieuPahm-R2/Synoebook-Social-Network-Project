@@ -8,6 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// c *fiber.Ctx là context của request hiện tại. Nó chứa body, params, query, response, status code, v.v
 func AuthMiddleware(c *fiber.Ctx) error {
 	tok := c.Get("Authorization")
 
@@ -31,8 +32,9 @@ func AuthMiddleware(c *fiber.Ctx) error {
 	}
 
 	SecretKey := os.Getenv("JWT_SECRET")
-
+	// interface{} đơn giản là kiểu “bất kỳ”. Trong trường hợp này, nó trả về secret key.
 	token, err := jwt.ParseWithClaims(tok, &jwt.StandardClaims{}, func(t *jwt.Token) (interface{}, error) {
+		//sẽ chuyển chuỗi "my_secret" thành dạng bytes:
 		return []byte(SecretKey), nil
 	})
 
@@ -49,7 +51,7 @@ func AuthMiddleware(c *fiber.Ctx) error {
 			"message": "unauthenticated",
 		})
 	}
-
+	// lưu userId vào context của request hiện tại.
 	c.Locals("userId", claims.Issuer)
 	return c.Next()
 
