@@ -1,0 +1,5 @@
+/backend/api/go.sum
+/backend/api/.env
+*.exe
+
+/frontend/.yarn
