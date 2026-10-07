@@ -2,6 +2,7 @@ package models
 
 import "go.mongodb.org/mongo-driver/bson/primitive"
 
+//omitempty nghĩa là nếu ID rỗng thì bỏ qua khi encode JSON hoặc BSON.
 type UserModel struct {
 	ID        primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
 	Name      string             `json:"name" bson:"name"`
